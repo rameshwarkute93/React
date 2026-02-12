@@ -1,0 +1,62 @@
+/* 🌈 Background Gradient */
+.login-bg{
+  background: linear-gradient(135deg,#f5f7fa,#c3cfe2);
+}
+
+
+
+
+/* ✨ Glass Card */
+.glass-card{
+  backdrop-filter: blur(14px);
+  background: rgba(255,255,255,0.85);
+  border-radius:20px;
+}
+
+/* 🔥 Login Card Size */
+.login-card{
+  max-width:400px;
+  width:100%;
+}
+
+/* 🌈 Gradient Heading */
+.gradient-text{
+  background: linear-gradient(90deg,#667eea,#764ba2);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+/* 🏷 Label */
+.form-label-modern{
+  font-weight:600;
+  color:#555;
+}
+
+/* 💎 Input */
+.modern-input{
+  border-radius:30px !important;
+  padding:12px;
+  border:1px solid #eaeaea;
+  transition:0.3s;
+}
+
+.modern-input:focus{
+  border-color:#4facfe;
+  box-shadow:0 0 0 2px rgba(79,172,254,0.2);
+}
+
+/* 🚀 Login Button */
+.btn-login{
+  border:none;
+  border-radius:30px;
+  padding:12px;
+  font-weight:600;
+  background:linear-gradient(90deg,#667eea,#764ba2);
+  color:white;
+  transition:0.3s;
+}
+
+.btn-login:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 20px rgba(0,0,0,0.15);
+}

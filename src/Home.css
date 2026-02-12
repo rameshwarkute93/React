@@ -1,0 +1,34 @@
+/* 🌈 Gradient Title */
+.gradient-text{
+  background: linear-gradient(90deg,#4facfe,#00f2fe);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+/* ✨ Glass Card */
+.glass-card{
+  backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.75);
+}
+
+/* 🔥 Modern Input */
+.modern-input{
+  border-radius:30px !important;
+  padding:12px;
+  border:1px solid #eaeaea;
+  transition:0.3s;
+}
+
+.modern-input:focus{
+  border-color:#4facfe;
+  box-shadow:0 0 0 2px rgba(79,172,254,0.2);
+}
+
+/* 🚀 Button */
+.btn-save{
+  border:none;
+  border-radius:25px;
+  background:linear-gradient(90deg,#667eea,#764ba2);
+  color:white;
+  font-weight:600;
+}

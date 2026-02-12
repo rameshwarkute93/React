@@ -1,0 +1,58 @@
+/* 🌟 Glass Navbar */
+.modern-navbar{
+  backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.7) !important;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  padding: 10px 20px;
+}
+
+/* 🌈 Gradient Brand Text */
+.gradient-text{
+  background: linear-gradient(90deg,#4facfe,#00f2fe);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* 🔥 Nav Links */
+.nav-link-custom{
+  text-decoration:none;
+  font-weight:600;
+  color:#333;
+  position:relative;
+  transition:0.3s;
+}
+
+.nav-link-custom:hover{
+  color:#4facfe;
+}
+
+/* underline animation */
+.nav-link-custom::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:-4px;
+  width:0%;
+  height:2px;
+  background:linear-gradient(90deg,#4facfe,#00f2fe);
+  transition:0.3s;
+}
+
+.nav-link-custom:hover::after{
+  width:100%;
+}
+
+/* ✨ Search Input */
+.modern-input{
+  border-radius:30px !important;
+  padding-left:15px;
+}
+
+/* 🚀 Search Button */
+.search-btn{
+  border:none;
+  border-radius:30px;
+  background:linear-gradient(90deg,#667eea,#764ba2);
+  color:white;
+  font-weight:600;
+}

@@ -1,0 +1,105 @@
+/* Glass Card Effect */
+.glass-card{
+  backdrop-filter: blur(10px);
+  background: rgba(255,255,255,0.8);
+}
+
+/* Gradient Heading */
+.gradient-text{
+  background: linear-gradient(90deg,#4facfe,#00f2fe);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* Table Style */
+.modern-table thead{
+  background: linear-gradient(90deg,#141e30,#243b55);
+  color:white;
+}
+
+.modern-table tbody tr{
+  transition: 0.25s;
+}
+
+.modern-table tbody tr:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+/* Buttons */
+.add-btn{
+  border:none;
+  padding:8px 16px;
+  border-radius:30px;
+  background:linear-gradient(90deg,#667eea,#764ba2);
+  color:white;
+  font-weight:600;
+}
+
+.btn-delete{
+  border-radius:20px;
+  background:#ff4d4f;
+  border:none;
+}
+
+.btn-update{
+  border-radius:20px;
+  background:#faad14;
+  border:none;
+}
+
+
+/* 🌈 Modal Header */
+.modern-modal-header{
+  border-bottom:none;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(10px);
+}
+
+/* ✨ Modal Body */
+.modern-modal-body{
+  background: rgba(255,255,255,0.75);
+}
+
+/* 🔥 Input Style */
+.modern-input{
+  border-radius:30px !important;
+  padding:10px 15px;
+  border:1px solid #eaeaea;
+  transition:0.3s;
+}
+
+.modern-input:focus{
+  box-shadow:0 0 0 2px rgba(79,172,254,0.2);
+  border-color:#4facfe;
+}
+
+/* 🏷 Label */
+.form-label-modern{
+  font-weight:600;
+  color:#555;
+}
+
+/* 🚀 Buttons */
+.btn-save{
+  border:none;
+  border-radius:25px;
+  padding:8px 18px;
+  background:linear-gradient(90deg,#667eea,#764ba2);
+  color:white;
+}
+
+.btn-update{
+  border:none;
+  border-radius:25px;
+  padding:8px 18px;
+  background:#faad14;
+  color:white;
+}
+
+.btn-cancel{
+  border-radius:25px;
+  background:#eaeaea;
+  border:none;
+  color:#333;
+}
