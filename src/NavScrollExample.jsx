@@ -81,7 +81,7 @@ const location = useLocation();
                 }
               }}
             />
-            <Button className="search-btn" onClick={handleSearch}>Search</Button>
+            <Button className="search-btn" onClick={handleSearch} active>Search</Button>
           </Form>
 
         </Navbar.Collapse>
