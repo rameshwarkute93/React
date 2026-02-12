@@ -38,14 +38,6 @@ const handleSearch = () => {
 };
 
 
-
-
-
-
-
-
-
-
 const location = useLocation();
 
   // Hide navbar on login page
@@ -89,7 +81,7 @@ const location = useLocation();
                 }
               }}
             />
-            <Button className="search-btn">Search</Button>
+            <Button className="search-btn" onClick={handleSearch}>Search</Button>
           </Form>
 
         </Navbar.Collapse>
