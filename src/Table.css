@@ -103,3 +103,35 @@
   border:none;
   color:#333;
 }
+
+/* .changed-row{
+  background: #fff3cd !important;
+  transition: 0.3s;
+} */
+
+.changed-row{
+  background:#fff3cd !important;
+  transition:0.4s;
+}
+
+/* ⭐ Upload Button Style */
+.upload-btn{
+  background:#0d6efd;
+  color:white;
+  padding:5px 10px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.upload-btn:hover{
+  background:#084298;
+}
+
+/* ⭐ File Badge */
+.file-badge{
+  background:#e7f1ff;
+  padding:5px 10px;
+  border-radius:20px;
+  font-size:13px;
+}

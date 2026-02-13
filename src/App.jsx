@@ -14,7 +14,8 @@ function ProtectedRoute({ isLoggedIn, children }) {
    return isLoggedIn ? children : <Navigate to="/" replace />;
  }
 export default function App() {
-  const[isLoggedIn,setIsLoggedIn] = useState(false)
+  // ⭐ PERSIST LOGIN AFTER REFRESH
+  const[isLoggedIn,setIsLoggedIn] = useState(localStorage.getItem("isLoggedIn")==="true")
   return (
 
 

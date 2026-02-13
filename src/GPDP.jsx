@@ -3,63 +3,78 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import {useEffect, useState } from "react";
 import axios from 'axios';
-import { data } from 'react-router-dom';
-import { use } from 'react';
 import "./Table.css"
+
 export default function GPDP(){
 
 const [show, setShow] = useState(false);
 const handleClose = () => setShow(false);
 const handleShow = () => setShow(true);
 
+// ⭐ highlight row
+const [changedId , setChangedId] = useState(null);
 
-// GET
+// ⭐ store uploaded file names
+const [fileNames , setFileNames] = useState({});
+
+
+
+// ======================= GET =======================
 const[data , setData] = useState([]);
-let api = () =>{
+// let api = ()=>{
+//   axios.get("http://localhost:8080/stud")
+//   .then(res=>setData(res.data))
+// }
+
+let api = ()=>{
   axios.get("http://localhost:8080/stud")
-  .then(res =>{
-    setData(res.data)
+  .then(res=>{
+
+    setData(res.data);
+
+    // ⭐ LOAD FILE NAMES AFTER REFRESH
+    res.data.forEach(stud=>{
+
+      axios.get(`http://localhost:8080/fileinfo/${stud.id}`)
+      .then(r=>{
+
+        if(r.data){
+          setFileNames(prev=>({
+            ...prev,
+            [stud.id]: r.data.fileName
+          }))
+        }
+
+      }).catch(()=>{})
+    })
+
   })
 }
 
 
-//POST
+// ======================= POST =======================
 const[nm , setName] = useState("");
 const[ct , setCity] = useState("");
-let getname = (e) =>{
-  setName(e.target.value);
-}
-let getcity = (e) =>{
-  setCity(e.target.value);
-}
-let addStudent = () =>{
-  const dt = {
-    name : nm,
-    city : ct 
-  }
-  alert(nm + " " + ct)
-  axios.post("http://localhost:8080/save",dt)
-  .then(res =>{
-    alert("Added Successfully")
-    api()
-    setShow(false)
+
+let addStudent = ()=>{
+  axios.post("http://localhost:8080/save",{name:nm,city:ct})
+  .then(()=>{
+    alert("Added Successfully");
+    api();
+    setShow(false);
   })
 }
 
-
-// DELETE
-let Delete = (id) =>{
-  alert(id)
+// ======================= DELETE =======================
+let Delete = (id)=>{
   axios.delete(`http://localhost:8080/del/${id}`)
-  .then(res =>{
-    alert("Deleted Successfully")
-    api()
-    setShow(false)
+  .then(()=>{
+    alert("Deleted Successfully");
+    api();
   })
 }
 
-
-// PUT
+// ======================= PUT =======================
 const [ushow, setUShow] = useState(false);
 const uhandleClose = () => setUShow(false);
 const uhandleShow = () => setUShow(true);
@@ -67,143 +82,195 @@ const uhandleShow = () => setUShow(true);
 const[uid , setUid] = useState("");
 const[unm , setUName] = useState("");
 const[uct , setUCity] = useState("");
-let getdata = (id , name , city) =>{
+
+let getdata = (id , name , city)=>{
   setUid(id);
   setUName(name);
-  setUCity(city)
+  setUCity(city);
 }
-let getnm = (e) =>{
-  setUName(e.target.value)
+
+let Update = ()=>{
+  axios.put("http://localhost:8080/update",{id:uid,name:unm,city:uct})
+  .then(()=>{
+    alert("Update Successfully");
+    api();
+    setUShow(false);
+  })
 }
-let getct = (e) =>{
-  setUCity(e.target.value)
+
+// ======================= FILE UPLOAD =======================
+const uploadFile = (rid , selectedFile)=>{
+
+  if(!selectedFile) return;
+
+  const formData = new FormData();
+  formData.append("file", selectedFile);
+
+  axios.post(`http://localhost:8080/upload/${rid}`,formData)
+  .then(res=>{
+
+    alert(res.data);
+
+    // ⭐ highlight animation
+    setChangedId(rid);
+
+    // ⭐ save filename
+    setFileNames(prev=>({
+      ...prev,
+      [rid]:selectedFile.name
+    }));
+
+    setTimeout(()=>setChangedId(null),2500);
+
+    api();
+  })
 }
-let Update = () => {
-  alert(unm + " " + uct)
-  const dt = {
-    name : unm,
-    city : uct,
-    id : uid
-  }
-  axios.put("http://localhost:8080/update",dt)
-  .then(res =>{
-    alert("Update Successfully")
-    api()
-    setUShow(false)
+
+// ======================= PREVIEW =======================
+
+
+// const previewFile=(sid)=>{
+//   window.open(`http://localhost:8080/file/${sid}`,"_blank");
+// }
+
+// ⭐ ADD THIS
+const [previewUrl , setPreviewUrl] = useState(null);
+
+const previewFile = (sid)=>{
+  setPreviewUrl(`http://localhost:8080/file/${sid}`);
+}
+
+
+// ======================= DOWNLOAD =======================
+// const downloadFile=(sid)=>{
+//   window.location.href=`http://localhost:8080/file/${sid}`;
+// }
+
+const downloadFile = (sid)=>{
+
+  axios({
+    url:`http://localhost:8080/file/${sid}`,
+    method:"GET",
+    responseType:"blob"
+  })
+  .then(res=>{
+
+    // ⭐ create download link
+    const url = window.URL.createObjectURL(new Blob([res.data]));
+
+    const link = document.createElement("a");
+    link.href = url;
+
+    // ⭐ use stored filename OR default
+    link.setAttribute("download", fileNames[sid] || "file");
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
   })
 }
 
 
-
-
+// ======================= USE EFFECT =======================
 useEffect(()=>{
   api()
 },[])
 
-  return(
-    <>
-
-
-      {/* <Button variant="secondary" onClick={handleShow} style={{margin:10}}>Add Student</Button> */}
-      {/* Save Form*/}
+return(
+<>
+{/* ================= SAVE MODAL ================= */}
 <Modal show={show} onHide={handleClose} centered>
-  <Modal.Header closeButton className="modern-modal-header">
-    <Modal.Title className="gradient-text">Add New Student</Modal.Title>
+  <Modal.Header closeButton>
+    <Modal.Title>Add New Student</Modal.Title>
   </Modal.Header>
-
-  <Modal.Body className="modern-modal-body">
+  <Modal.Body>
     <Form>
       <Form.Group className="mb-3">
-        <Form.Label className="form-label-modern">Student Name</Form.Label>
-        <Form.Control
-          type="text"
-          onChange={getname}
-          placeholder="Enter student name"
-          className="modern-input"
-        />
+        <Form.Label>Student Name</Form.Label>
+        <Form.Control type="text" onChange={(e)=>setName(e.target.value)}/>
       </Form.Group>
 
       <Form.Group>
-        <Form.Label className="form-label-modern">City</Form.Label>
-        <Form.Control
-          type="text"
-          onChange={getcity}
-          placeholder="Enter city"
-          className="modern-input"
-        />
+        <Form.Label>City</Form.Label>
+        <Form.Control type="text" onChange={(e)=>setCity(e.target.value)}/>
       </Form.Group>
     </Form>
   </Modal.Body>
-
-  <Modal.Footer className="border-0">
-    <Button className="btn-cancel" onClick={handleClose}>
-      Close
-    </Button>
-    <Button className="btn-save" onClick={addStudent}>
-      Save Student
-    </Button>
+  <Modal.Footer>
+    <Button onClick={handleClose}>Close</Button>
+    <Button onClick={addStudent}>Save Student</Button>
   </Modal.Footer>
 </Modal>
 
-
-{/* Update Form*/}
+{/* ================= UPDATE MODAL ================= */}
 <Modal show={ushow} onHide={uhandleClose} centered>
-  <Modal.Header closeButton className="modern-modal-header">
-    <Modal.Title className="gradient-text">Update Student</Modal.Title>
+  <Modal.Header closeButton>
+    <Modal.Title>Update Student</Modal.Title>
   </Modal.Header>
-
-  <Modal.Body className="modern-modal-body">
+  <Modal.Body>
     <Form>
       <Form.Group className="mb-3">
-        <Form.Label className="form-label-modern">Student Name</Form.Label>
-        <Form.Control
-          type="text"
-          value={unm}
-          onChange={getnm}
-          className="modern-input"
-        />
+        <Form.Label>Student Name</Form.Label>
+        <Form.Control value={unm} onChange={(e)=>setUName(e.target.value)}/>
       </Form.Group>
-
       <Form.Group>
-        <Form.Label className="form-label-modern">City</Form.Label>
-        <Form.Control
-          type="text"
-          value={uct}
-          onChange={getct}
-          className="modern-input"
-        />
+        <Form.Label>City</Form.Label>
+        <Form.Control value={uct} onChange={(e)=>setUCity(e.target.value)}/>
       </Form.Group>
     </Form>
   </Modal.Body>
-
-  <Modal.Footer className="border-0">
-    <Button className="btn-cancel" onClick={uhandleClose}>
-      Close
-    </Button>
-    <Button className="btn-update" onClick={Update}>
-      Update Student
-    </Button>
+  <Modal.Footer>
+    <Button onClick={uhandleClose}>Close</Button>
+    <Button onClick={Update}>Update Student</Button>
   </Modal.Footer>
 </Modal>
 
 
 
-<div className="container mt-4">
-  <div className="card border-0 shadow-lg rounded-4 glass-card">
+{/* ⭐ FILE PREVIEW MODAL */}
+<Modal
+  show={previewUrl !== null}
+  onHide={()=>setPreviewUrl(null)}
+  size="lg"
+  centered
+>
 
-    {/* Header Section */}
+  <Modal.Header closeButton>
+    <Modal.Title>File Preview</Modal.Title>
+  </Modal.Header>
+
+  <Modal.Body style={{height:"80vh"}}>
+
+    {previewUrl && (
+      <iframe
+        src={previewUrl}
+        title="preview"
+        width="100%"
+        height="100%"
+        style={{border:"none"}}
+      />
+    )}
+
+  </Modal.Body>
+
+</Modal>
+
+
+
+
+{/* ================= TABLE ================= */}
+<div className="container mt-4">
+  <div className="card border-0 shadow-lg rounded-4">
     <div className="card-body">
 
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h4 className="fw-bold gradient-text mb-0">Student Dashboard</h4>
-
-        <Button className="add-btn" onClick={handleShow}>
-          + Add Student
-        </Button>
+        <h4 className="fw-bold mb-0">Student Dashboard</h4>
+        <Button onClick={handleShow}>+ Add Student</Button>
       </div>
 
       <div className="table-responsive">
-        <table className="table align-middle text-center modern-table">
+        <table className="table align-middle text-center">
 
           <thead>
             <tr>
@@ -215,35 +282,49 @@ useEffect(()=>{
           </thead>
 
           <tbody>
-            {data.map((item) => (
-              <tr key={item.id}>
-                <td className="fw-semibold">{item.id}</td>
+            {data.map((item)=>(
+              <tr key={item.id}
+              className={changedId===item.id ? "changed-row":""}
+              >
+
+                <td>{item.id}</td>
                 <td>{item.name}</td>
-                <td>
-                  <span className="badge bg-info-subtle text-dark px-3 py-2 rounded-pill">
-                    {item.city}
-                  </span>
-                </td>
+                <td>{item.city}</td>
 
                 <td>
-                  <Button
-                    size="sm"
-                    className="btn-delete me-2"
-                    onClick={() => Delete(item.id)}
-                  >
+
+                  <Button size="sm" className="me-2"
+                  onClick={()=>Delete(item.id)}>
                     Delete
                   </Button>
 
-                  <Button
-                    size="sm"
-                    className="btn-update"
-                    onClick={() => {
-                      getdata(item.id, item.name, item.city);
-                      uhandleShow();
-                    }}
-                  >
+                  <Button size="sm" className="me-2"
+                  onClick={()=>{getdata(item.id,item.name,item.city);uhandleShow();}}>
                     Update
                   </Button>
+
+                  {/* ⭐ PROFESSIONAL UPLOAD BUTTON */}
+                  <label className="upload-btn me-2">
+                    📎
+                    <input type="file" hidden
+                    onChange={(e)=>uploadFile(item.id,e.target.files[0])}/>
+                  </label>
+
+                  {/* ⭐ FILE BADGE + ACTIONS */}
+                  {fileNames[item.id] && (
+                    <>
+                      <span className="file-badge me-2">
+                        📄 {fileNames[item.id]}
+                      </span>
+
+                      <Button size="sm" className="btn-preview me-1"
+                      onClick={()=>previewFile(item.id)}>👁️</Button>
+
+                      <Button size="sm" className="btn-download"
+                      onClick={()=>downloadFile(item.id)}>⬇️</Button>
+                    </>
+                  )}
+
                 </td>
               </tr>
             ))}
@@ -255,8 +336,6 @@ useEffect(()=>{
     </div>
   </div>
 </div>
-
-
-    </>
-  )
+</>
+)
 }

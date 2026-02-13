@@ -14,8 +14,10 @@ export default function LoginPage({setIsLoggedIn}){
   let login = ()=>{
     if(mob === "9322315429"){
       alert("Login Successfully");
-      setIsLoggedIn(true)
+      localStorage.setItem("isLoggedIn","true"); // ⭐ ADD THIS
+      setIsLoggedIn(true);
       navigate("/home");
+
     }else{
       alert("Invalid Mobile Number");
     }
